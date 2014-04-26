@@ -3,7 +3,7 @@
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {unlockedrows=1,money=100,blue=3,green=3,yellow=3,fertilizer=3,growingplants={}})
+    savefile = readLocalData("savefile", {unlockedtiles=3,money=100,blue=3,green=3,yellow=3,fertilizer=3,growingplants={}})
     
     function drawachievementbox(drawx, drawy, drawheight, drawwidth)
         spriteMode(CORNER)
@@ -11,6 +11,7 @@ function setup()
         sprite(minecraft_achievement_left, drawx, drawy, 4*(drawheight/32), drawheight)
         sprite(minecraft_achievement_right, drawx+(drawwidth-(drawheight/8)), drawy, drawheight/8, drawheight)
     end
+    function drawmain
     function resettextures()
         minecraft_achievment_center = "Dropbox:minecraft_achievment_center"
         minecraft_achievement_left = "Dropbox:minecraft_achievement_left"
@@ -23,7 +24,6 @@ function setup()
         special_bluepotion = "Dropbox:bluepotion"
         special_greenpotion = "Dropbox:greenpotion"
         special_yellowpotion = "Dropbox:yellowpotion"
-        special_plus = "Dropbox:plus"
         tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
         tinkersconstruct_blankcast = "Dropbox:tinkersconstruct_blankcast"
     end
@@ -101,13 +101,17 @@ function draw()
     for x=128, 1024-256, 128 do
         for y=128, (4-savefile.unlockedrows)*128, 128 do
             sprite(tinkersconstruct_blankcast, x, y, 128, 128)
-            sprite(special_plus, x, y, 128, 128)
+            strokeWidth(5)
+            line(x+64, y+32, x+64, y+32+64)
+            line(x+32, y+64, x+32+64, y+64)
         end
     end
     stroke(255, 255, 255, 255)
     strokeWidth(5)
     noFill()
     rect(128, 128, 1024-256, 768-256)
-    line(128, 128*(5-savefile.unlockedrows), 1024-128, 128*(5-savefile.unlockedrows))
+    noStroke()
+    fill(255, 255, 255, 255)
+    rect(128, 128*(5-savefile.unlockedrows), 1024-256, 5)
 end
 
