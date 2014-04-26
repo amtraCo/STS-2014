@@ -1,4 +1,5 @@
 -- GMO Game
+-- by amtra5
 
 -- Use this function to perform your initial setup
 function setup()
@@ -27,21 +28,21 @@ function setup()
         tinkersconstruct_blankcast = "Dropbox:tinkersconstruct_blankcast"
     end
     function sphax_set()
-        minecraft_achievment_center = "Dropbox:sphax_minecraft_achievment_center"
-        minecraft_achievement_left = "Dropbox:sphax_minecraft_achievement_left"
-        minecraft_achievement_right = "Dropbox:sphax_minecraft_achievement_right"
         minecraft_bonemeal = "Dropbox:sphax_minecraft_bonemeal"
         minecraft_tilledsoil = "Dropbox:sphax_minecraft_tilledsoil"
         minecraft_tilledwetsoil = "Dropbox:sphax_minecraft_tilledwetsoil"
         minecraft_gold = "Dropbox:sphax_minecraft_gold"
-        railcraft_frostbrick = "Dropbox:sphax_railcraft_frostbrick"
+        special_bluepotion = "Dropbox:sphax_bluepotion"
+        special_greenpotion = "Dropbox:sphax_greenpotion"
+        special_yellowpotion = "Dropbox:sphax_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:sphax_tinkersconstruct_advanceddrawbridge"
         tinkersconstruct_blankcast = "Dropbox:sphax_tinkersconstruct_blankcast"
     end
     
     resettextures()
     
-    --parameter.action("Sphax", sphax_set())
+    parameter.action("Default", resettextures)
+    parameter.action("Sphax", sphax_set)
 end
 
 -- This function gets called once every frame
