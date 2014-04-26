@@ -32,6 +32,7 @@ function setup()
         minecraft_tilledsoil = "Dropbox:sphax_minecraft_tilledsoil"
         minecraft_tilledwetsoil = "Dropbox:sphax_minecraft_tilledwetsoil"
         minecraft_gold = "Dropbox:sphax_minecraft_gold"
+        railcraft_frostbrick = "Dropbox:sphax_railcraft_frostbrick"
         special_bluepotion = "Dropbox:sphax_bluepotion"
         special_greenpotion = "Dropbox:sphax_greenpotion"
         special_yellowpotion = "Dropbox:sphax_yellowpotion"
