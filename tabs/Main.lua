@@ -40,6 +40,8 @@ function setup()
     end
     
     resettextures()
+    
+    --parameter.action("Sphax", sphax_set())
 end
 
 -- This function gets called once every frame
