@@ -42,7 +42,6 @@ function setup()
         special_yellowpotion = "Dropbox:sphax_special_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:sphax_tinkersconstruct_advanceddrawbridge"
     end
-    
     function drawachievementbox(drawx, drawy, drawheight, drawwidth)
         spriteMode(CORNER)
         sprite(minecraft_achievment_center, drawx+(drawheight/8), drawy, drawwidth-2*(drawheight/8), drawheight)
@@ -51,13 +50,6 @@ function setup()
     end
     function drawmain()
         --draw main box
-        --spriteMode(CORNER)
-        --for x=128, 1024-256, 128 do
-        --    for y=768-256, 768-128-(savefile.unlockedrows*128), -128 do
-        --        sprite(minecraft_tilledsoil, x, y, 128, 128)
-        --    end
-        --end
-        
         for plot = 1, #savefile.slots do
             local plotdata = savefile.slots[plot]
             local plotx = plotdata.x
@@ -72,29 +64,19 @@ function setup()
             end
         end
         
-        --rectMode(CORNER)
-        --noStroke()
-        --fill(93, 84, 84, 255)
-        --rect(128, 128, 1024-256, 128*(4-savefile.unlockedrows))
-        --for x=128, 1024-256, 128 do
-        --    for y=128, (4-savefile.unlockedrows)*128, 128 do
-        --        sprite(railcraft_steelblock, x, y, 128, 128)
-        --        strokeWidth(5)
-        --        line(x+64, y+32, x+64, y+32+64)
-        --        line(x+32, y+64, x+32+64, y+64)
-        --    end
-        --end
-        --stroke(255, 255, 255, 255)
-        --strokeWidth(5)
-        --noFill()
-        --rect(128, 128, 1024-256, 768-256)
-        --noStroke()
-        --fill(255, 255, 255, 255)
-        --rect(128, 128*(5-savefile.unlockedrows), 1024-256, 5)
+        rectMode(CORNER)
+        stroke(255, 255, 255, 255)
+        noFill()
+        strokeWidth(5)
+        rect(128, 128, 1024-256, 768-256)
+    end
+    function touch(tx, ty)
+        if currentscreen == "main" and tx >= 0 and tx <= 128 and ty >= 0 and ty <= 128 then currentscreen = "viewquests" end
     end
     
     resettextures()
     
+    parameter.action("Reset Display", function() currentscreen = "main" end)
     parameter.action("Default", resettextures)
     parameter.action("Sphax", sphax_set)
 end
@@ -106,6 +88,8 @@ function draw()
 
     -- This sets the line thickness
     strokeWidth(5)
+    
+    if CurrentTouch.state == BEGAN and (CurrentTouch.x ~= lasttouchx or CurrentTouch.y ~= lasttouchy) then touch(CurrentTouch.x, CurrentTouch.y) end
 
     -- Do your drawing here
     
@@ -152,4 +136,3 @@ function draw()
     
     if currentscreen == "main" then drawmain() end
 end
-
