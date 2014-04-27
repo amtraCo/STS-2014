@@ -3,7 +3,45 @@
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {unlockedtiles=3,money=100,blue=3,green=3,yellow=3,fertilizer=3,growingplants={}})
+    savefile = readLocalData("savefile", {money=100,blue=3,green=3,yellow=3,fertilizer=3,carrots=0,potatos=0,wheat=0,slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked",tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+    
+    currentscreen = "main"
+    
+    function resettextures()
+        hqm_questbook = "Dropbox:hqm_questbook"
+        minecraft_achievment_center = "Dropbox:minecraft_achievment_center"
+        minecraft_achievement_left = "Dropbox:minecraft_achievement_left"
+        minecraft_achievement_right = "Dropbox:minecraft_achievement_right"
+        minecraft_bonemeal = "Dropbox:minecraft_bonemeal"
+        minecraft_carrot = "Dropbox:minecraft_carrot"
+        minecraft_tilledsoil = "Dropbox:minecraft_tilledsoil"
+        minecraft_tilledwetsoil = "Dropbox:minecraft_tilledwetsoil"
+        minecraft_gold = "Dropbox:minecraft_gold"
+        minecraft_potato = "Dropbox:minecraft_potato"
+        minecraft_wheat = "Dropbox:minecraft_wheat"
+        railcraft_frostbrick = "Dropbox:railcraft_frostbrick"
+        railcraft_steelblock = "Dropbox:railcraft_steelblock"
+        special_bluepotion = "Dropbox:special_bluepotion"
+        special_greenpotion = "Dropbox:special_greenpotion"
+        special_yellowpotion = "Dropbox:special_yellowpotion"
+        tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
+    end
+    function sphax_set()
+        hqm_questbook = "Dropbox:sphax_hqm_questbook"
+        minecraft_bonemeal = "Dropbox:sphax_minecraft_bonemeal"
+        minecraft_carrot = "Dropbox:sphax_minecraft_carrot"
+        minecraft_tilledsoil = "Dropbox:sphax_minecraft_tilledsoil"
+        minecraft_tilledwetsoil = "Dropbox:sphax_minecraft_tilledwetsoil"
+        minecraft_gold = "Dropbox:sphax_minecraft_gold"
+        minecraft_potato = "Dropbox:sphax_minecraft_potato"
+        minecraft_wheat = "Dropbox:sphax_minecraft_wheat"
+        railcraft_frostbrick = "Dropbox:sphax_railcraft_frostbrick"
+        railcraft_steelblock = "Dropbox:sphax_railcraft_steelblock"
+        special_bluepotion = "Dropbox:sphax_special_bluepotion"
+        special_greenpotion = "Dropbox:sphax_special_greenpotion"
+        special_yellowpotion = "Dropbox:sphax_special_yellowpotion"
+        tinkersconstruct_advanceddrawbridge = "Dropbox:sphax_tinkersconstruct_advanceddrawbridge"
+    end
     
     function drawachievementbox(drawx, drawy, drawheight, drawwidth)
         spriteMode(CORNER)
@@ -11,33 +49,48 @@ function setup()
         sprite(minecraft_achievement_left, drawx, drawy, 4*(drawheight/32), drawheight)
         sprite(minecraft_achievement_right, drawx+(drawwidth-(drawheight/8)), drawy, drawheight/8, drawheight)
     end
-    function drawmain
-    function resettextures()
-        minecraft_achievment_center = "Dropbox:minecraft_achievment_center"
-        minecraft_achievement_left = "Dropbox:minecraft_achievement_left"
-        minecraft_achievement_right = "Dropbox:minecraft_achievement_right"
-        minecraft_bonemeal = "Dropbox:minecraft_bonemeal"
-        minecraft_tilledsoil = "Dropbox:minecraft_tilledsoil"
-        minecraft_tilledwetsoil = "Dropbox:minecraft_tilledwetsoil"
-        minecraft_gold = "Dropbox:minecraft_gold"
-        railcraft_frostbrick = "Dropbox:railcraft_frostbrick"
-        special_bluepotion = "Dropbox:bluepotion"
-        special_greenpotion = "Dropbox:greenpotion"
-        special_yellowpotion = "Dropbox:yellowpotion"
-        tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
-        tinkersconstruct_blankcast = "Dropbox:tinkersconstruct_blankcast"
-    end
-    function sphax_set()
-        minecraft_bonemeal = "Dropbox:sphax_minecraft_bonemeal"
-        minecraft_tilledsoil = "Dropbox:sphax_minecraft_tilledsoil"
-        minecraft_tilledwetsoil = "Dropbox:sphax_minecraft_tilledwetsoil"
-        minecraft_gold = "Dropbox:sphax_minecraft_gold"
-        railcraft_frostbrick = "Dropbox:sphax_railcraft_frostbrick"
-        special_bluepotion = "Dropbox:sphax_bluepotion"
-        special_greenpotion = "Dropbox:sphax_greenpotion"
-        special_yellowpotion = "Dropbox:sphax_yellowpotion"
-        tinkersconstruct_advanceddrawbridge = "Dropbox:sphax_tinkersconstruct_advanceddrawbridge"
-        tinkersconstruct_blankcast = "Dropbox:sphax_tinkersconstruct_blankcast"
+    function drawmain()
+        --draw main box
+        --spriteMode(CORNER)
+        --for x=128, 1024-256, 128 do
+        --    for y=768-256, 768-128-(savefile.unlockedrows*128), -128 do
+        --        sprite(minecraft_tilledsoil, x, y, 128, 128)
+        --    end
+        --end
+        
+        for plot = 1, #savefile.slots do
+            local plotdata = savefile.slots[plot]
+            local plotx = plotdata.x
+            local ploty = plotdata.y
+            if plotdata.tiletype == "blank" then
+                sprite(minecraft_tilledsoil, plotx, ploty, 128, 128)
+            elseif plotdata.tiletype == "locked" then
+                sprite(railcraft_steelblock, plotx, ploty, 128, 128)
+                strokeWidth(5)
+                line(plotx+64, ploty+32, plotx+64, ploty+32+64)
+                line(plotx+32, ploty+64, plotx+32+64, ploty+64)
+            end
+        end
+        
+        --rectMode(CORNER)
+        --noStroke()
+        --fill(93, 84, 84, 255)
+        --rect(128, 128, 1024-256, 128*(4-savefile.unlockedrows))
+        --for x=128, 1024-256, 128 do
+        --    for y=128, (4-savefile.unlockedrows)*128, 128 do
+        --        sprite(railcraft_steelblock, x, y, 128, 128)
+        --        strokeWidth(5)
+        --        line(x+64, y+32, x+64, y+32+64)
+        --        line(x+32, y+64, x+32+64, y+64)
+        --    end
+        --end
+        --stroke(255, 255, 255, 255)
+        --strokeWidth(5)
+        --noFill()
+        --rect(128, 128, 1024-256, 768-256)
+        --noStroke()
+        --fill(255, 255, 255, 255)
+        --rect(128, 128*(5-savefile.unlockedrows), 1024-256, 5)
     end
     
     resettextures()
@@ -64,54 +117,39 @@ function draw()
         end
     end
     
-    sprite(tinkersconstruct_advanceddrawbridge, 1024-64, 64, 128)
+    sprite(tinkersconstruct_advanceddrawbridge, 1024-64, 64, 128, 128)
+    sprite(hqm_questbook, 64, 64, 128, 128)
     
     --draw money/fertiliser/gmo stats
-    drawachievementbox(224, 768-16-64, 64, 256)
-    drawachievementbox(544, 768-16-64, 64, 256)
-    drawachievementbox(176, 16, 64, 192)
-    drawachievementbox(416, 16, 64, 192)
-    drawachievementbox(656, 16, 64, 192)
+    drawachievementbox(64, 768-16-64, 64, 128)
+    drawachievementbox(256, 768-16-64, 64, 128)
+    drawachievementbox(448, 768-16-64, 64, 128)
+    drawachievementbox(640, 768-16-64, 64, 128)
+    drawachievementbox(832, 768-16-64, 64, 128)
+    drawachievementbox(208, 16, 64, 160)
+    drawachievementbox(432, 16, 64, 160)
+    drawachievementbox(656, 16, 64, 160)
     spriteMode(CORNER)
-    sprite(minecraft_gold, 224+8, 768-16-64, 64, 64)
-    sprite(minecraft_bonemeal, 544+8, 768-16-64, 64, 64)
-    sprite(special_bluepotion, 176+8, 16, 64, 64)
-    sprite(special_greenpotion, 416+8, 16, 64, 64)
+    sprite(minecraft_gold, 64+8, 768-16-64, 64, 64)
+    sprite(minecraft_carrot, 256, 768-16-64, 64, 64)
+    sprite(minecraft_potato, 448, 768-16-64, 64, 64)
+    sprite(minecraft_wheat, 640, 768-16-64, 64, 64)
+    sprite(minecraft_bonemeal, 832+8, 768-16-64, 64, 64)
+    sprite(special_bluepotion, 208+8, 16, 64, 64)
+    sprite(special_greenpotion, 432+8, 16, 64, 64)
     sprite(special_yellowpotion, 656+8, 16, 64, 64)
     textMode(CORNER)
     fill(255, 255, 255, 255)
-    fontSize(30)
-    text(savefile.money, 224+64+8, 768-64)
-    text(savefile.fertilizer, 544+64+8, 768-64)
-    text(savefile.blue, 176+64+8, 32)
-    text(savefile.green, 416+64+8, 32)
-    text(savefile.yellow, 656+64+8, 32)
+    fontSize(15)
+    text(savefile.money, 64+64+8, 768-58)
+    text(savefile.carrots, 256+64+8, 768-58)
+    text(savefile.potatos, 448+64+8, 768-58)
+    text(savefile.wheat, 640+64+8, 768-58)
+    text(savefile.fertilizer, 832+64+8, 768-58)
+    text(savefile.blue, 208+64+8, 38)
+    text(savefile.green, 432+64+8, 38)
+    text(savefile.yellow, 656+64+8, 38)
     
-    --draw main box
-    spriteMode(CORNER)
-    for x=128, 1024-256, 128 do
-        for y=768-256, 768-128-(savefile.unlockedrows*128), -128 do
-            sprite(minecraft_tilledsoil, x, y, 128, 128)
-        end
-    end
-    rectMode(CORNER)
-    noStroke()
-    fill(93, 84, 84, 255)
-    --rect(128, 128, 1024-256, 128*(4-savefile.unlockedrows))
-    for x=128, 1024-256, 128 do
-        for y=128, (4-savefile.unlockedrows)*128, 128 do
-            sprite(tinkersconstruct_blankcast, x, y, 128, 128)
-            strokeWidth(5)
-            line(x+64, y+32, x+64, y+32+64)
-            line(x+32, y+64, x+32+64, y+64)
-        end
-    end
-    stroke(255, 255, 255, 255)
-    strokeWidth(5)
-    noFill()
-    rect(128, 128, 1024-256, 768-256)
-    noStroke()
-    fill(255, 255, 255, 255)
-    rect(128, 128*(5-savefile.unlockedrows), 1024-256, 5)
+    if currentscreen == "main" then drawmain() end
 end
 
