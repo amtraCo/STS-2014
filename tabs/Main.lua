@@ -6,7 +6,7 @@ supportedOrientations(LANDSCAPE_ANY)
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {money=100,blue=3,green=3,yellow=3,fertilizer=3,carrots=0,potatos=0,wheat=0,slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked",tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+    savefile = readLocalData("savefile", {money=100,blue=3,green=3,yellow=3,fertilizer=3,carrots=0,potatos=0,wheat=0,quests={{questno=1,questname="Welcome",description="Welcome to GMO Game",done=false,questdata={}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked",tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
     
     currentscreen = "main"
     parameter.watch("currentscreen")
@@ -30,8 +30,10 @@ function setup()
         railcraft_steelblock = "Dropbox:railcraft_steelblock"
         special_bluepotion = "Dropbox:special_bluepotion"
         special_greenpotion = "Dropbox:special_greenpotion"
+        special_questlist = "Dropbox:special_questlist"
         special_yellowpotion = "Dropbox:special_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
+        thermalexpansion_debugger = "Dropbox:thermalexpansion_debugger"
     end
     function sphax_set()
         hqm_questbook = "Dropbox:sphax_hqm_questbook"
@@ -49,6 +51,7 @@ function setup()
         special_greenpotion = "Dropbox:sphax_special_greenpotion"
         special_yellowpotion = "Dropbox:sphax_special_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:sphax_tinkersconstruct_advanceddrawbridge"
+        thermalexpansion_debugger = "Dropbox:sphax_thermalexpansion_debugger"
     end
     function drawachievementbox(drawx, drawy, drawheight, drawwidth)
         spriteMode(CORNER)
@@ -79,10 +82,27 @@ function setup()
         rect(128, 128, 1024-256, 768-256)
     end
     function drawviewquests()
-        
+        sprite(special_questlist, 236, 198)
+        if #savefile.quests >= 1 then
+            drawachievementbox(263, 430, 105, 400)
+        end
+        if #savefile.quests >= 2 then
+            drawachievementbox(263, 324, 105, 400)
+        end
+        if #savefile.quests >= 3 then
+            drawachievementbox(263, 218, 105, 400)
+        end
     end
     function drawshop()
         
+    end
+    function drawbibliography()
+        sprite(minecraft_bookpage, 293, 114, 438, 540)
+        textMode(CENTER)
+        textAlign(CENTER)
+        textWrapWidth(350)
+        fill(0, 0, 0, 255)
+        text("Touch anywhere to continue", 512, 170)
     end
     function drawgmoinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -96,20 +116,26 @@ function setup()
     function drawcarrotinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
         textMode(CENTER)
+        textAlign(CENTER)
+        textWrapWidth(350)
         fill(0, 0, 0, 255)
-        text("Touch anywhere to continue", 512, 160)
+        text("Touch anywhere to continue", 512, 170)
     end
     function drawpotatoinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
         textMode(CENTER)
+        textAlign(CENTER)
+        textWrapWidth(350)
         fill(0, 0, 0, 255)
-        text("Touch anywhere to continue", 512, 160)
+        text("Touch anywhere to continue", 512, 170)
     end
     function drawwheatinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
         textMode(CENTER)
+        textAlign(CENTER)
+        textWrapWidth(350)
         fill(0, 0, 0, 255)
-        text("Touch anywhere to continue", 512, 160)
+        text("Touch anywhere to continue", 512, 170)
     end
     function touch(tx, ty)
         lasttouchx = tx
@@ -119,6 +145,8 @@ function setup()
             currentscreen = "viewquests" 
         elseif currentscreen == "main" and tx >= 896 and tx <= 1024 and ty >= 0 and ty <= 128 then
             currentscreen = "shop"
+        elseif currentscreen == "main" and tx >= 896 and ty <= 1024 and ty >= 128 and ty <= 256 then
+            currentscreen = "bibliography"
         elseif currentscreen == "main" and ((tx >= 208 and tx <= 368) or (tx >= 432 and tx <= 592) or (tx >= 656 and tx <= 816)) and ty >= 16 and ty <= 80 then
             currentscreen = "gmoinfo"
         elseif currentscreen == "main" and tx >= 256 and tx <= 384 and ty >= 688 and ty <= 752 then
@@ -127,7 +155,7 @@ function setup()
             currentscreen = "potatoinfo"
         elseif currentscreen == "main" and tx >= 640 and tx <= 704 and ty >= 688 and ty <= 752 then
             currentscreen = "wheatinfo"
-        elseif currentscreen == "gmoinfo" or currentscreen == "carrotinfo" or currentscreen == "potatoinfo" or currentscreen == "wheatinfo" then
+        elseif currentscreen == "bibliography" or currentscreen == "gmoinfo" or currentscreen == "carrotinfo" or currentscreen == "potatoinfo" or currentscreen == "wheatinfo" then
             currentscreen = "main"
         end
     end
@@ -161,6 +189,7 @@ function draw()
     
     sprite(tinkersconstruct_advanceddrawbridge, 1024-64, 64, 128, 128)
     sprite(hqm_questbook, 64, 64, 128, 128)
+    sprite(thermalexpansion_debugger, 1024-64, 192, 128, 128)
     
     --draw money/fertiliser/gmo stats
     drawachievementbox(64, 768-16-64, 64, 128)
@@ -197,6 +226,7 @@ function draw()
     if currentscreen == "main" then drawmain() 
     elseif currentscreen == "viewquests" then drawviewquests()
     elseif currentscreen == "shop" then drawshop()
+    elseif currentscreen == "bibliography" then drawbibliography()
     elseif currentscreen == "gmoinfo" then drawgmoinfo()
     elseif currentscreen == "carrotinfo" then drawcarrotinfo()
     elseif currentscreen == "potatoinfo" then drawpotatoinfo()
