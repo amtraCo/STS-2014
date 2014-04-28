@@ -15,9 +15,6 @@ function setup()
     
     function resettextures()
         hqm_questbook = "Dropbox:hqm_questbook"
-        minecraft_achievment_center = "Dropbox:minecraft_achievment_center"
-        minecraft_achievement_left = "Dropbox:minecraft_achievement_left"
-        minecraft_achievement_right = "Dropbox:minecraft_achievement_right"
         minecraft_bonemeal = "Dropbox:minecraft_bonemeal"
         minecraft_bookpage = "Dropbox:minecraft_bookpage"
         minecraft_carrot = "Dropbox:minecraft_carrot"
@@ -28,9 +25,16 @@ function setup()
         minecraft_wheat = "Dropbox:minecraft_wheat"
         railcraft_frostbrick = "Dropbox:railcraft_frostbrick"
         railcraft_steelblock = "Dropbox:railcraft_steelblock"
+        special_achievement_center = "Dropbox:special_achievement_center"
+        special_achievement_left = "Dropbox:special_achievement_left"
+        special_achievement_right = "Dropbox:special_achievement_right"
+        special_achievement_centergreen = "Dropbox:special_achievement_centergreen"
+        special_achievement_leftgreen = "Dropbox:special_achievement_leftgreen"
+        special_achievement_rightgreen = "Dropbox:special_achievement_rightgreen"
         special_bluepotion = "Dropbox:special_bluepotion"
         special_greenpotion = "Dropbox:special_greenpotion"
         special_questlist = "Dropbox:special_questlist"
+        special_shop = "Dropbox:special_shop"
         special_yellowpotion = "Dropbox:special_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
         thermalexpansion_debugger = "Dropbox:thermalexpansion_debugger"
@@ -55,9 +59,15 @@ function setup()
     end
     function drawachievementbox(drawx, drawy, drawheight, drawwidth)
         spriteMode(CORNER)
-        sprite(minecraft_achievment_center, drawx+(drawheight/8), drawy, drawwidth-2*(drawheight/8), drawheight)
-        sprite(minecraft_achievement_left, drawx, drawy, 4*(drawheight/32), drawheight)
-        sprite(minecraft_achievement_right, drawx+(drawwidth-(drawheight/8)), drawy, drawheight/8, drawheight)
+        sprite(special_achievement_center, drawx+(drawheight/8), drawy, drawwidth-2*(drawheight/8), drawheight)
+        sprite(special_achievement_left, drawx, drawy, 4*(drawheight/32), drawheight)
+        sprite(special_achievement_right, drawx+(drawwidth-(drawheight/8)), drawy, drawheight/8, drawheight)
+    end
+    function drawachievementboxgreen(drawx, drawy, drawheight, drawwidth)
+        spriteMode(CORNER)
+        sprite(special_achievement_centergreen, drawx+(drawheight/8), drawy, drawwidth-2*(drawheight/8), drawheight)
+        sprite(special_achievement_leftgreen, drawx, drawy, 4*(drawheight/32), drawheight)
+        sprite(special_achievement_rightgreen, drawx+(drawwidth-(drawheight/8)), drawy, drawheight/8, drawheight)
     end
     function drawmain()
         --draw main box
@@ -94,7 +104,12 @@ function setup()
         end
     end
     function drawshop()
-        
+        sprite(special_shop, 320, 217)
+        sprite(minecraft_gold, 352, 413, 64, 64)
+        text(currentshopdeal.amount, 384, 413)
+        sprite(currentshopdeal.art, 434, 280, 192, 192)
+        textMode(CENTER)
+        text(currentshopdeal.name, 528, 250)
     end
     function drawbibliography()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -103,6 +118,13 @@ function setup()
         textWrapWidth(350)
         fill(0, 0, 0, 255)
         text("Touch anywhere to continue", 512, 170)
+        text("GMO Game", 512, 620)
+        text("Code - Angus Trau", 512, 550)
+        text("Research - Allan Chan, Mark Soo", 512, 535)
+        text("Textures:", 512, 505)
+        text("Created by the PureBDCraft Community", 512, 490)
+        text("Customized by Angus Trau", 512, 475)
+        text("Sources:", 512, 445)
     end
     function drawgmoinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -142,25 +164,71 @@ function setup()
         lasttouchy = ty
         print("touch: "..tx..", "..ty)
         if currentscreen == "main" and tx >= 0 and tx <= 128 and ty >= 0 and ty <= 128 then 
+            print("button: viewquests")
             currentscreen = "viewquests" 
         elseif currentscreen == "main" and tx >= 896 and tx <= 1024 and ty >= 0 and ty <= 128 then
+            print("button: shop")
             currentscreen = "shop"
         elseif currentscreen == "main" and tx >= 896 and ty <= 1024 and ty >= 128 and ty <= 256 then
+            print("button: bibliography")
             currentscreen = "bibliography"
         elseif currentscreen == "main" and ((tx >= 208 and tx <= 368) or (tx >= 432 and tx <= 592) or (tx >= 656 and tx <= 816)) and ty >= 16 and ty <= 80 then
+            print("button: gmoinfo")
             currentscreen = "gmoinfo"
         elseif currentscreen == "main" and tx >= 256 and tx <= 384 and ty >= 688 and ty <= 752 then
+            print("button: carrotinfo")
             currentscreen = "carrotinfo"
         elseif currentscreen == "main" and tx >= 448 and tx <= 576 and ty >= 688 and ty <= 752 then
+            print("button: potatoinfo")
             currentscreen = "potatoinfo"
         elseif currentscreen == "main" and tx >= 640 and tx <= 704 and ty >= 688 and ty <= 752 then
+            print("button: wheatinfo")
             currentscreen = "wheatinfo"
         elseif currentscreen == "bibliography" or currentscreen == "gmoinfo" or currentscreen == "carrotinfo" or currentscreen == "potatoinfo" or currentscreen == "wheatinfo" then
+            print("button: exittomain")
             currentscreen = "main"
+        elseif currentscreen == "viewquests" then
+            touchviewquests(tx, ty)
+        elseif currentscreen == "shop" then
+            touchshop(tx, ty)
+        end
+    end
+    function touchviewquests(tx, ty)
+        if tx >= 729 and tx <= 761 and ty >= 516 and ty <= 546 then
+            print("button: exittomain")
+            currentscreen = "main"
+        end
+    end
+    function touchshop(tx, ty)
+        if tx >= 637 and tx <= 677 and ty >= 488 and ty <= 524 then
+            print("button: exittomain")
+            currentscreen = "main"
+        elseif tx >= 365 and tx <= 409 and ty >= 491 and ty <= 523 then
+            print("button: shopscrollup")
+            if shopcurrentselected == #shopdeals then
+                shopcurrentselected = 1
+                currentshopdeal = shopdeals[1]
+            else
+                shopcurrentselected = shopcurrentselected + 1
+                currentshopdeal = shopdeals[shopcurrentselected]
+            end
+        elseif tx >= 365 and tx <= 409 and ty >= 304 and ty <= 334 then
+            print("button:shopscrolldown")
+            if shopcurrentselected == 1 then
+                shopcurrentselected = #shopdeals
+                currentshopdeal = shopdeals[#shopdeals]
+            else
+                shopcurrentselected = shopcurrentselected - 1
+                currentshopdeal = shopdeals[shopcurrentselected]
+            end
         end
     end
     
     resettextures()
+    sphax_set()
+    shopcurrentselected = 1
+    shopdeals = {{amount=5,callback=function() plant("carrot") end,art=minecraft_carrot,name="500 Carrots"},{amount=10, callback=function() plant("carrot") end,art=minecraft_potato,name="500 Potatos"}}
+    currentshopdeal = shopdeals[shopcurrentselected]
     
     parameter.action("Reset Display", function() currentscreen = "main" end)
     parameter.action("Default", resettextures)
