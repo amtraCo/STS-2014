@@ -6,12 +6,14 @@ supportedOrientations(LANDSCAPE_ANY)
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {money=100,blue=3,green=3,yellow=3,fertilizer=3,carrots=0,potatos=0,wheat=0,quests={{questno=1,questname="Welcome",description="Welcome to GMO Game",done=false,questdata={}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked",tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+    savefile = readLocalData("savefile", {currentblankavaliable=3,money=100,blue=3,green=3,yellow=3,fertilizer=3,carrots=0,potatos=0,wheat=0,quests={{questno=1,questname="Welcome",description="Welcome to GMO Game",done=false,questdata={}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked",tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
     
-    currentscreen = "main"
+    currentscreen = "splash"
+    buystate = 1
     parameter.watch("currentscreen")
     lasttouchx = 0
     lasttouchy = 0
+    splashtimeout = 5
     
     function resettextures()
         hqm_questbook = "Dropbox:hqm_questbook"
@@ -33,13 +35,19 @@ function setup()
         special_achievement_rightgreen = "Dropbox:special_achievement_rightgreen"
         special_bluepotion = "Dropbox:special_bluepotion"
         special_greenpotion = "Dropbox:special_greenpotion"
+        special_greenshade = "Dropbox:special_greenshade"
         special_questlist = "Dropbox:special_questlist"
+        special_redshade = "Dropbox:special_redshade"
         special_shop = "Dropbox:special_shop"
         special_yellowpotion = "Dropbox:special_yellowpotion"
         tinkersconstruct_advanceddrawbridge = "Dropbox:tinkersconstruct_advanceddrawbridge"
         thermalexpansion_debugger = "Dropbox:thermalexpansion_debugger"
     end
     function sphax_set()
+        cofh_block = "Dropbox:cofh_block"
+        cofh_cross = "Dropbox:cofh_cross"
+        cofh_info = "Dropbox:cofh_info"
+        cofh_tick = "Dropbox:cofh_tick"
         hqm_questbook = "Dropbox:sphax_hqm_questbook"
         minecraft_bonemeal = "Dropbox:sphax_minecraft_bonemeal"
         minecraft_bookpage = "Dropbox:sphax_minecraft_bookpage"
@@ -82,6 +90,9 @@ function setup()
                 strokeWidth(5)
                 line(plotx+64, ploty+32, plotx+64, ploty+32+64)
                 line(plotx+32, ploty+64, plotx+32+64, ploty+64)
+            elseif plotdata.tiletype == "growingcarrot" then
+                sprite(minecraft_tilledwetsoil, plotx, ploty, 128, 128)
+                sprite(minecraft_carrot, plotx+32, ploty+32, 64, 64)
             end
         end
         
@@ -109,7 +120,15 @@ function setup()
         text(currentshopdeal.amount, 384, 413)
         sprite(currentshopdeal.art, 434, 280, 192, 192)
         textMode(CENTER)
-        text(currentshopdeal.name, 528, 250)
+        if buystate == 1 then
+            text(currentshopdeal.name, 528, 250)
+        end
+        if buystate == 2 then
+            sprite(cofh_block, 354, 341, 64, 64)
+            sprite(cofh_tick, 340, 217, 64, 64)
+            sprite(cofh_cross, 620, 217, 64, 64)
+            text("Are you sure?", 528, 250)
+        end
     end
     function drawbibliography()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -203,6 +222,7 @@ function setup()
         if tx >= 637 and tx <= 677 and ty >= 488 and ty <= 524 then
             print("button: exittomain")
             currentscreen = "main"
+            buystate = 1
         elseif tx >= 365 and tx <= 409 and ty >= 491 and ty <= 523 then
             print("button: shopscrollup")
             if shopcurrentselected == #shopdeals then
@@ -212,6 +232,7 @@ function setup()
                 shopcurrentselected = shopcurrentselected + 1
                 currentshopdeal = shopdeals[shopcurrentselected]
             end
+            buystate = 1
         elseif tx >= 365 and tx <= 409 and ty >= 304 and ty <= 334 then
             print("button:shopscrolldown")
             if shopcurrentselected == 1 then
@@ -221,13 +242,48 @@ function setup()
                 shopcurrentselected = shopcurrentselected - 1
                 currentshopdeal = shopdeals[shopcurrentselected]
             end
+            buystate = 1
+        elseif tx >= 354 and tx <= 416 and ty >= 341 and ty <= 413 then
+            print("button: confirmbuy")
+            buystate = 2
+        elseif tx >= 340 and tx <= 404 and ty >= 217 and ty <= 261 and buystate == 2 then
+            buystate = 1
+            currentshopdeal.callback()
+        elseif tx >= 620 and tx <= 684 and ty >= 217 and ty <= 261 and buystate == 2 then
+            print("button: cancelbuy")
+            buystate = 1
+        end
+    end
+    function plant(product, productdata)
+        print("button: buy "..product)
+        if product == "500carrot" then
+            if savefile.money >= productdata.amount and savefile.currentblankavaliable > 0 then
+                savefile.money = savefile.money - productdata.amount
+                alert("Successfuly bought 500 carrots!", "Store")
+                for plot = 1, 24 do
+                    if savefile.slots[plot].tiletype == "blank" then
+                        setplot = savefile.slots[plot]
+                        setplot.tiletype = "growingcarrot"
+                        setplot.tiledata = {growthstart=os.date("!*t"),plantdata=productdata}
+                        savefile.currentblankavaliable = savefile.currentblankavaliable - 1 
+                        currentscreen = "main"
+                        return
+                    end
+                end
+            else
+                if savefile.money < productdata.amount then
+                    alert("You don't have enough gold!", "Shop")
+                else
+                    alert("You don't have any more free slots!", "Shop")
+                end
+            end
         end
     end
     
     resettextures()
     sphax_set()
     shopcurrentselected = 1
-    shopdeals = {{amount=5,callback=function() plant("carrot") end,art=minecraft_carrot,name="500 Carrots"},{amount=10, callback=function() plant("carrot") end,art=minecraft_potato,name="500 Potatos"}}
+    shopdeals = {{amount=5,callback=function() plant("500carrot", shopdeals[1]) end,art=minecraft_carrot,name="500 Carrots"},{amount=10, callback=function() plant("500potato", shopdeals[2]) end,art=minecraft_potato,name="500 Potatos"},{amount=15,callback=function() plant("500wheat", shopdeals[3]) end,art=minecraft_wheat,name="500 Wheat"},{amount=30,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
     currentshopdeal = shopdeals[shopcurrentselected]
     
     parameter.action("Reset Display", function() currentscreen = "main" end)
@@ -299,5 +355,23 @@ function draw()
     elseif currentscreen == "carrotinfo" then drawcarrotinfo()
     elseif currentscreen == "potatoinfo" then drawpotatoinfo()
     elseif currentscreen == "wheatinfo" then drawwheatinfo()
+    end
+    
+    if splashtimeout > 0 then
+        noStroke()
+        spriteMode(CENTER)
+        for x=32, 1024-32, 64 do
+            for y=32, 768-32, 64 do
+                sprite(railcraft_frostbrick, x, y, 64)
+            end
+        end
+        textMode(CENTER)
+        fontSize(50)
+        text("Loading...", 512, 384)
+        splashtimeout = splashtimeout - 1 
+    end
+    if splashtimeout == 0 then
+        currentscreen = "main"
+        splashtimeout = -1
     end
 end
