@@ -6,11 +6,14 @@ supportedOrientations(LANDSCAPE_ANY)
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrots=0,potatos=0,wheat=0,quests={{questno=1,questname="Welcome",description="Welcome to GMO Game",done=false,questdata={}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+    savefile = readLocalData("savefile", {currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrot=0,potato=0,wheat=0,quests={{questname="Welcome",done=false,questdata={buy={carrot=0,carrotgoal=50}}},{questname="Vegie Gardener",done=false,questdata={harvest={carrot=0,carrotgoal=50,potato=0,potatogoal=50,wheat=0,wheatgoal=50}}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
     
+    music("Game Music One:Nothingness", true)
     currentscreen = "splash"
     buystate = 1
+    opengmoinfotimeout = -1
     parameter.watch("currentscreen")
+    parameter.number("volume", 0, 1, 0)
     lasttouchx = 0
     lasttouchy = 0
     lastdragx = 0
@@ -20,6 +23,7 @@ function setup()
     currentselectedgmoplotno = "none"
     buyingplot = "none"
     splashtimeout = 5
+    currenttopquest = 1
     
     function resettextures()
         hqm_questbook = "Dropbox:hqm_questbook"
@@ -62,6 +66,7 @@ function setup()
         minecraft_tilledsoil = "Dropbox:sphax_minecraft_tilledsoil"
         minecraft_tilledwetsoil = "Dropbox:sphax_minecraft_tilledwetsoil"
         minecraft_gold = "Dropbox:sphax_minecraft_gold"
+        minecraft_minecartchest = "Dropbox:sphax_minecraft_minecartchest"
         minecraft_potato = "Dropbox:sphax_minecraft_potato"
         minecraft_wheat = "Dropbox:sphax_minecraft_wheat"
         railcraft_frostbrick = "Dropbox:sphax_railcraft_frostbrick"
@@ -86,6 +91,8 @@ function setup()
     end
     function drawmain()
         --draw main box
+        local time = os.date("!*t")
+        local currenttime = (time.year*31536000+time.month*7776000+time.day*86400+time.hour*3600+time.min*60+time.sec)
         for plot = 1, #savefile.slots do
             local plotdata = savefile.slots[plot]
             local plotx = plotdata.x
@@ -95,6 +102,7 @@ function setup()
             elseif plotdata.tiletype == "locked" then
                 sprite(railcraft_steelblock, plotx, ploty, 128, 128)
                 strokeWidth(5)
+                stroke(255, 255, 255, 255)
                 line(plotx+64, ploty+32, plotx+64, ploty+32+64)
                 line(plotx+32, ploty+64, plotx+32+64, ploty+64)
             elseif plotdata.tiletype == "growingcarrot" then
@@ -106,15 +114,77 @@ function setup()
             elseif plotdata.tiletype == "growingwheat" then
                 sprite(minecraft_tilledwetsoil, plotx, ploty, 128, 128)
                 sprite(minecraft_wheat, plotx+32, ploty+32, 64, 64)
+            elseif plotdata.tiletype == "harvest" then
+                sprite(minecraft_tilledsoil, plotx, ploty, 128, 128)
+                local producttype = plotdata.tiledata.plantdata.art
+                local producttypename = string.sub(producttype, 11)
+                sprite(minecraft_minecartchest, plotx+32, ploty+32, 64, 64)
+                sprite(producttype, plotx+32, ploty+32, 64, 64)
             end
-            if plotdata.tiledata.blue == true and (currentdragginggmo == "blue" or currentdragginggmo == "none") then
+            if plotdata.tiledata.blue and (currentdragginggmo == "blue" or currentdragginggmo == "none") then
                 sprite(special_bluepotion, plotx+8, ploty+88, 32, 32)
             end
-            if plotdata.tiledata.green == true and (currentdragginggmo == "green" or currentdragginggmo == "none") then
+            if plotdata.tiledata.green and (currentdragginggmo == "green" or currentdragginggmo == "none") then
                 sprite(special_greenpotion, plotx+32+8, ploty+88, 32, 32)
             end
-            if plotdata.tiledata.yellow == true and (currentdragginggmo == "yellow" or currentdragginggmo == "none") then
+            if plotdata.tiledata.yellow and (currentdragginggmo == "yellow" or currentdragginggmo == "none") then
                 sprite(special_yellowpotion, plotx+64+8, ploty+88, 32, 32)
+            end
+            if plotdata.tiletype == "growingcarrot" or plotdata.tiletype == "growingpotato" or plotdata.tiletype == "growingwheat" or plotdata.tiletype == "harvest" then
+                plotdata.tiledata.timeend = {year=(plotdata.tiledata.growthstart.year+plotdata.tiledata.plantdata.growtime.y),month=(plotdata.tiledata.growthstart.month+plotdata.tiledata.plantdata.growtime.mo),day=(plotdata.tiledata.growthstart.day+plotdata.tiledata.plantdata.growtime.d),hour=(plotdata.tiledata.growthstart.hour+plotdata.tiledata.plantdata.growtime.h),min=(plotdata.tiledata.growthstart.min+plotdata.tiledata.plantdata.growtime.m),sec=(plotdata.tiledata.growthstart.sec+plotdata.tiledata.plantdata.growtime.s)}
+                local plotgrowtime = (plotdata.tiledata.plantdata.growtime.y*31536000+plotdata.tiledata.plantdata.growtime.mo*7776000+plotdata.tiledata.plantdata.growtime.d*86400+plotdata.tiledata.plantdata.growtime.h*3600+plotdata.tiledata.plantdata.growtime.m*60+plotdata.tiledata.plantdata.growtime.s)
+                local finishtime = (plotdata.tiledata.timeend.year*31536000+plotdata.tiledata.timeend.month*7776000+plotdata.tiledata.timeend.day*86400+plotdata.tiledata.timeend.hour*3600+plotdata.tiledata.timeend.min*60+plotdata.tiledata.timeend.sec)
+                --local timeleft = {year=0,month=0,day=0,hour=0,min=0,sec=finishtime - currenttime}
+                if plotdata.tiledata.blue then
+                    finishtime = finishtime-plotgrowtime/2
+                end
+                if plotdata.tiledata.fertilizer then
+                    if plotdata.tiledata.fertilizer > 0 then
+                        print(plotdata.tiledata.fertilizer)
+                        finishtime = finishtime-(plotdata.tiledata.fertilizer*300)
+                    end
+                end
+                local timeleftsec = finishtime-currenttime
+                
+                if false then -- plotdata.tiledata.blue == 1 then
+                    local newendtime = finishtime - (plotgrowtime/2)
+                    while newendtime > 60 do
+                        newendtime = newendtime - 60
+                        plotdata.tiledata.timeend.min = plotdata.tiledata.timeend.min + 1  
+                    end
+                    while plotdata.tiledata.timeend.min > 60 do
+                        plotdata.tiledata.timeend.min = plotdata.tiledata.timeend.min - 60
+                        plotdata.tiledata.timeend.hour = plotdata.tiledata.timeend.hour + 1
+                    end
+                    while plotdata.tiledata.timeend.hour > 24 do
+                        plotdata.tiledata.timeend.hour = plotdata.tiledata.timeend.hour - 24
+                        plotdata.tiledata.timeend.day = plotdata.tiledata.timeend.day + 1
+                    end
+                    while plotdata.tiledata.timeend.day > 30 do
+                        plotdata.tiledata.timeend.day = plotdata.tiledata.timeend.day - 30
+                        plotdata.tiledata.timeend.month = plotdata.tiledata.timeend.month + 1
+                    end
+                    --bug: will be 1 day longer on the 31st of each month with 31
+                    while plotdata.tiledata.timeend.month > 12 do
+                        plotdata.tiledata.timeend.month = plotdata.tiledata.timeend.month - 12
+                        plotdata.tiledata.timeend.year = plotdata.tiledata.timeend.year + 1
+                    end
+                end
+                if timeleftsec <= -10800 and plotdata.tiletype == "harvest" and not plotdata.tiledata.yellow then
+                    plotdata.tiletype = "blank"
+                elseif timeleftsec <= 0 then
+                    plotdata.tiletype = "harvest"
+                else
+                    fill(10, 255, 0, 255)
+                    stroke(255, 255, 255, 255)
+                    noStroke()
+                    rectMode(CORNERS)
+                    rect(plotx+14, ploty+14, plotx+14+(math.floor(((plotgrowtime-timeleftsec)/plotgrowtime)*100)), ploty+18)
+                    noFill()
+                    stroke(255, 255, 255, 255)
+                    strokeWidth(2)
+                    rect(plotx+14, ploty+14, plotx+114, ploty+18)
+                end
             end
         end
         
@@ -124,7 +194,7 @@ function setup()
                 local plotx = plotdata.x
                 local ploty = plotdata.y
                 if math.floor(lastdragx/128)*128 == plotx and math.floor(lastdragy/128)*128 == ploty then
-                    if plotdata.tiletype == "blank" or plotdata.tiletype == "locked" or savefile[currentdragginggmo] == 0 or plotdata.tiledata[currentdragginggmo] == true then
+                    if plotdata.tiletype == "blank" or plotdata.tiletype == "locked" or savefile[currentdragginggmo] == 0 or plotdata.tiledata[currentdragginggmo] == true or plotdata.tiletype == "harvest" then
                         sprite(special_redshade, plotx, ploty, 128, 128)
                         currentselectedgmoplotno = "none"
                     else
@@ -143,14 +213,51 @@ function setup()
     end
     function drawviewquests()
         sprite(special_questlist, 236, 198)
-        if #savefile.quests >= 1 then
-            drawachievementbox(263, 430, 105, 400)
-        end
-        if #savefile.quests >= 2 then
-            drawachievementbox(263, 324, 105, 400)
-        end
-        if #savefile.quests >= 3 then
-            drawachievementbox(263, 218, 105, 400)
+        --if #savefile.quests >= 1 then
+        --    drawachievementbox(263, 430, 105, 400)
+        --end
+        --if #savefile.quests >= 2 then
+        --    drawachievementbox(263, 324, 105, 400)
+        --end
+        --if #savefile.quests >= 3 then
+        --    drawachievementbox(263, 218, 105, 400)
+        --end
+        for i=currenttopquest, currenttopquest+2 do
+            local questdata = savefile.quests[i] or false
+            if questdata then
+                local position = i + 1 - currenttopquest
+                
+                if questdata.done == "collect" then
+                    if position == 1 then
+                        drawachievementboxgreen(263, 430, 105, 400)
+                    elseif position == 2 then
+                        drawachievementboxgreen(263, 324, 105, 400)
+                    elseif position == 3 then
+                        drawachievementboxgreen(263, 218, 105, 400)
+                    end
+                else
+                    if position == 1 then
+                        drawachievementbox(263, 430, 105, 400)
+                    elseif position == 2 then
+                        drawachievementbox(263, 324, 105, 400)
+                    elseif position == 3 then
+                        drawachievementbox(263, 218, 105, 400)
+                    end
+                end
+                
+                if questdata.done then
+                    sprite(cofh_tick, 273, (535-64-20-((position-1)*105)), 64, 64)
+                else
+                    sprite(cofh_cross, 273, (535-64-20-((position-1)*105)), 64, 64)
+                end
+                fontSize(20)
+                text(i..". "..questdata.questname, 347, (535-40-((position-1)*105)))
+                
+                fontSize(10)
+                if questdata.questdata.buy then
+                    text("Buy:", 347, (535-60-((position-1)*105)))
+                end
+            end
         end
     end
     function drawshop()
@@ -185,7 +292,7 @@ function setup()
         text("Research - Allan Chan, Mark Soo", 512, 535)
         text("Textures:", 512, 505)
         text("Angus Trau", 512, 475)
-        text("PureBDCraft", 512, 490)
+        text("BDCraft", 512, 490)
         text("Sources:", 512, 445)
         fill(255, 255, 255, 255)
         textMode(CORNER)
@@ -266,7 +373,8 @@ function setup()
             currentscreen = "bibliography"
         elseif currentscreen == "main" and ((tx >= 208 and tx <= 368) or (tx >= 432 and tx <= 592) or (tx >= 656 and tx <= 816)) and ty >= 16 and ty <= 80 then
             print("button: gmoinfo")
-            currentscreen = "gmoinfo"
+            --currentscreen = "gmoinfo"
+            opengmoinfotimeout = 5
         elseif currentscreen == "main" and tx >= 256 and tx <= 384 and ty >= 688 and ty <= 752 then
             print("button: carrotinfo")
             currentscreen = "carrotinfo"
@@ -280,7 +388,7 @@ function setup()
             print("button: exittomain")
             currentscreen = "main"
         elseif currentscreen == "main" and tx >= 128 and tx <= 896 and ty >= 128 and ty <= 640 then
-            touchmain(tx, ty)
+            touchtile(tx, ty)
         elseif currentscreen == "viewquests" then
             touchviewquests(tx, ty)
         elseif currentscreen == "shop" or currentscreen == "buyplot" then
@@ -289,7 +397,7 @@ function setup()
             touchbibliography(tx, ty)
         end
     end
-    function touchmain(tx, ty)
+    function touchtile(tx, ty)
         touchedtilex = math.floor(tx/128)*128
         touchedtiley = math.floor(ty/128)*128
         print("touch: tile at "..touchedtilex..", "..touchedtiley)
@@ -302,6 +410,17 @@ function setup()
                     print("button: buyplot")
                     buyingplot = plotdata
                     currentscreen = "buyplot"
+                elseif plotdata.tiletype == "harvest" then
+                    local producttype = plotdata.tiledata.plantdata.art
+                    local producttypename = string.sub(producttype, 25)
+                    savefile[producttypename] = savefile[producttypename] + plotdata.tiledata.plantdata.returnamount
+                    savefile.money = savefile.money + plotdata.tiledata.plantdata.returnamountgold
+                    if plotdata.tiledata.green then
+                        savefile.money = savefile.money + plotdata.tiledata.plantdata.returnamountgold
+                    end
+                    plotdata.tiletype = "blank"
+                    plotdata.tiledata = {}
+                    savefile.currentblankavaliable = savefile.currentblankavaliable + 1
                 end
             end
         end
@@ -310,6 +429,7 @@ function setup()
         if tx >= 729 and tx <= 761 and ty >= 516 and ty <= 546 then
             print("button: exittomain")
             currentscreen = "main"
+        --elseif tx >= 
         end
     end
     function touchshop(tx, ty)
@@ -372,19 +492,19 @@ function setup()
         end
     end
     function drag(dx, dy, dtx, dty)
+        opengmoinfotimeout = -1
         lastinteractivemode = "drag"
         lastdragx = dtx
         lastdragy = dty
         print("drag: from "..dtx..", "..dty.." to "..dtx+dx..", "..dty+dy)
-        if dtx >= 208 and dtx <= 368 and dty >= 16 and dty <= 80 then
+        if currentscreen == "main" and dtx >= 208 and dtx <= 368 and dty >= 16 and dty <= 80 then
             currentdragginggmo = "blue"
-            currentscreen = "main"
-        elseif dtx >= 432 and dtx <= 592 and dty >= 16 and dty <= 80 then
+        elseif currentscreen == "main" and dtx >= 432 and dtx <= 592 and dty >= 16 and dty <= 80 then
             currentdragginggmo = "green"
-            currentscreen = "main"
-        elseif dtx >= 656 and dtx <= 816 and dty >= 16 and dty <= 80 then
+        elseif currentscreen == "main" and dtx >= 656 and dtx <= 816 and dty >= 16 and dty <= 80 then
             currentdragginggmo = "yellow"
-            currentscreen = "main"
+        elseif currentscreen == "main" and dtx >= 832 and dtx <= 960 and dty >= 688 and dty <= 752 then
+            currentdragginggmo = "fertilizer"
         end
     end
     function interactend()
@@ -392,8 +512,46 @@ function setup()
             
         else
             if lastdragx >= 128 and lastdragx <= 896 and lastdragy >= 128 and lastdragy <= 640 and currentselectedgmoplotno ~= "none" then
-                savefile.slots[currentselectedgmoplotno].tiledata[currentdragginggmo] = true
+                savefile.slots[currentselectedgmoplotno].tiledata[currentdragginggmo] = savefile.slots[currentselectedgmoplotno].tiledata[currentdragginggmo] or 0
+                savefile.slots[currentselectedgmoplotno].tiledata[currentdragginggmo] = savefile.slots[currentselectedgmoplotno].tiledata[currentdragginggmo] + 1
                 savefile[currentdragginggmo] = savefile[currentdragginggmo] - 1
+            
+                --local plotdata = savefile.slots[currentselectedgmoplotno]
+                --if currentdragginggmo == "blue" then
+                    --print(1)
+                    --print(2)
+                    --local oldtimeend = plotdata.tiledata.timeend
+                    --plotdata.tiledata.timeend = {year=(plotdata.tiledata.growthstart.year+plotdata.tiledata.plantdata.growtime.y),month=(plotdata.tiledata.growthstart.month+plotdata.tiledata.plantdata.growtime.mo),day=(plotdata.tiledata.growthstart.day+plotdata.tiledata.plantdata.growtime.d),hour=(plotdata.tiledata.growthstart.hour+plotdata.tiledata.plantdata.growtime.h),min=(plotdata.tiledata.growthstart.min+plotdata.tiledata.plantdata.growtime.m),sec=(plotdata.tiledata.growthstart.sec+plotdata.tiledata.plantdata.growtime.s)}
+                    --print(3)
+                    --local plotgrowtime = (plotdata.tiledata.plantdata.growtime.y*31536000+plotdata.tiledata.plantdata.growtime.mo*7776000+plotdata.tiledata.plantdata.growtime.d*86400+plotdata.tiledata.plantdata.growtime.h*3600+plotdata.tiledata.plantdata.growtime.m*60+plotdata.tiledata.plantdata.growtime.s)
+                    --print(4)
+                    --local finishtime = (oldtimeend.year*31536000+oldtimeend.month*7776000+oldtimeend.day*86400+oldtimeend.hour*3600+oldtimeend.min*60+oldtimeend.sec)
+                    --local newendtime = finishtime - (plotgrowtime/2)
+                    --print(newendtime)
+                    --local newtime = {year=0,month=0,day=0,hour=0,min=0,sec=0}
+                    --while newendtime >= 60 do
+                    --    newendtime = newendtime - 60
+                    --    newtime.min = newtime.min + 1
+                    --end
+                    --newtime.sec = newendtime
+                    --while plotdata.tiledata.timeend.min > 60 do
+                    --    plotdata.tiledata.timeend.min = plotdata.tiledata.timeend.min - 60
+                    --    plotdata.tiledata.timeend.hour = plotdata.tiledata.timeend.hour + 1
+                    --end
+                    --while plotdata.tiledata.timeend.hour > 24 do
+                    --    plotdata.tiledata.timeend.hour = plotdata.tiledata.timeend.hour - 24
+                    --    plotdata.tiledata.timeend.day = plotdata.tiledata.timeend.day + 1
+                    --end
+                    --while plotdata.tiledata.timeend.day > 30 do
+                    --    plotdata.tiledata.timeend.day = plotdata.tiledata.timeend.day - 30
+                    --    plotdata.tiledata.timeend.month = plotdata.tiledata.timeend.month + 1
+                    --end
+                    ----bug: will be 1 day longer on the 31st of each month with 31
+                    --while plotdata.tiledata.timeend.month > 12 do
+                    --    plotdata.tiledata.timeend.month = plotdata.tiledata.timeend.month - 12
+                    --    plotdata.tiledata.timeend.year = plotdata.tiledata.timeend.year + 1
+                    --end
+                --end
             end
             currentdragginggmo = "none"
             currentselectedgmoplotno = "none"
@@ -433,7 +591,8 @@ function setup()
                         savefile.slots[plot].tiletype = "growingwheat"
                         alert("Successfuly bought 1000 wheat!", "Shop")
                     end
-                    savefile.slots[plot].tiledata = {growthstart=os.date("!*t"),plantdata=productdata}
+                    savefile.slots[plot].tiledata.growthstart = os.date("!*t")
+                    savefile.slots[plot].tiledata.plantdata = productdata
                     savefile.currentblankavaliable = savefile.currentblankavaliable - 1 
                     currentscreen = "main"
                     return
@@ -451,7 +610,7 @@ function setup()
     resettextures()
     sphax_set()
     shopcurrentselected = 1
-    shopdeals = {{amount=10,returnamount=50,callback=function() plant("50carrot", shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots"},{amount=20,returnamount=100,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots"},{amount=200,returnamount=1000,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots"},{amount=20,returnamount=50,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos"},{amount=40,returnamount=100,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos"},{amount=400,returnamount=1000,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos"},{amount=30,returnamount=50,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat"},{amount=60,returnamount=100,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat"},{amount=600,returnamount=1000,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat"},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
+    shopdeals = {{amount=10,returnamount=50,returnamountgold=13,callback=function() plant("50carrot",shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots",growtime={y=0,mo=0,d=0,h=0,m=2,s=0}},{amount=20,returnamount=100,returnamountgold=30,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots",growtime={y=0,mo=0,d=0,h=0,m=4,s=0}},{amount=200,returnamount=1000,returnamountgold=400,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots",growtime={y=0,mo=0,d=0,h=0,m=40,s=0}},{amount=20,returnamount=50,returnamountgold=26,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos",growtime={y=0,mo=0,d=0,h=0,m=5,s=0}},{amount=40,returnamount=100,returnamountgold=60,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=400,returnamount=1000,returnamountgold=800,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos",growtime={y=0,mo=0,d=0,h=1,m=40,s=0}},{amount=30,returnamount=50,returnamountgold=37,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=60,returnamount=100,returnamountgold=90,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat",growtime={mo=0,d=0,h=0,m=20,s=0}},{amount=600,returnamount=1000,returnamountgold=1200,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat",growtime={y=0,mo=0,d=0,h=3,m=20,s=0}},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
     currentshopdeal = shopdeals[shopcurrentselected]
     
     fps = math.floor(DeltaTime*60*60)
@@ -518,19 +677,19 @@ function draw()
     else
         text(savefile.money, 64+64+8, 768-58)
     end
-    if savefile.carrots >= 1000 and savefile.carrots <= 999999 then
-        text((math.floor(savefile.carrots/100)/10).."K", 256+64+8, 768-58)
-    elseif savefile.carrots >= 100000 then
-        text((math.floor(savefile.carrots/100000)/10).."M", 256+64+8, 768-58)
+    if savefile.carrot >= 1000 and savefile.carrot <= 999999 then
+        text((math.floor(savefile.carrot/100)/10).."K", 256+64+8, 768-58)
+    elseif savefile.carrot >= 100000 then
+        text((math.floor(savefile.carrot/100000)/10).."M", 256+64+8, 768-58)
     else
-        text(savefile.carrots, 256+64+8, 768-58)
+        text(savefile.carrot, 256+64+8, 768-58)
     end
-    if savefile.potatos >= 1000 and savefile.potatos <= 999999 then
-        text((math.floor(savefile.potatos/100)/10).."K", 448+64+8, 768-58)
-    elseif savefile.potatos >= 100000 then
-        text((math.floor(savefile.potatos/100000)/10).."M", 448+64+8, 768-58)
+    if savefile.potato >= 1000 and savefile.potato <= 999999 then
+        text((math.floor(savefile.potato/100)/10).."K", 448+64+8, 768-58)
+    elseif savefile.potato >= 100000 then
+        text((math.floor(savefile.potato/100000)/10).."M", 448+64+8, 768-58)
     else
-        text(savefile.potatos, 448+64+8, 768-58)
+        text(savefile.potato, 448+64+8, 768-58)
     end
     if savefile.wheat >= 1000 and savefile.wheat <= 999999 then
         text((math.floor(savefile.wheat/100)/10).."K", 640+64+8, 768-58)
@@ -585,7 +744,7 @@ function draw()
         noStroke()
         spriteMode(CENTER)
         for x=32, 1024-32, 64 do
-            for y=32, 768-32, 64 do
+          for y=32, 768-32, 64 do
                 sprite(railcraft_frostbrick, x, y, 64)
             end
         end
@@ -598,5 +757,14 @@ function draw()
         currentscreen = "main"
         splashtimeout = -1
     end
+    if opengmoinfotimeout > 0 then
+        opengmoinfotimeout = opengmoinfotimeout - 1
+    end
+    if opengmoinfotimeout == 0 then
+        opengmoinfotimeout = -1
+        currentscreen = "gmoinfo"
+    end
     --savefile.money = 1000000000
+    
+    music.volume = volume
 end
