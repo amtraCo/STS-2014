@@ -6,7 +6,7 @@ supportedOrientations(LANDSCAPE_ANY)
 
 -- Use this function to perform your initial setup
 function setup()
-    savefile = readLocalData("savefile", {currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrot=0,potato=0,wheat=0,quests={{questname="Welcome",done=false,questdata={buy={carrot=0,carrotgoal=50}}},{questname="Vegie Gardener",done=false,questdata={harvest={carrot=0,carrotgoal=50,potato=0,potatogoal=50,wheat=0,wheatgoal=50}}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+    savefile = readLocalData("savefile", {tutorial=false,currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrot=0,potato=0,wheat=0,quests={{questname="Welcome",done=false,returnamount=50,questdata={buy={carrot=0,carrotgoal=50}}},{questname="Backyard Gardener",done=false,questdata={harvest={carrot=0,carrotgoal=50,potato=0,potatogoal=50,wheat=0,wheatgoal=50}}},{questname="Small Fry Farmer",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=200,potato=0,potatogoal=200,wheat=0,wheatgoal=200}}},{questname="Family Buisness",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=1000,potato=0,potatogoal=1000,wheat=0,wheatgoal=1000}}},{questname="GMO Student",done=false,returnamount=100,questdata={buy={blue=0,bluegoal=1,green=0,greengoal=1,yellow=0,yellowgoal=1}}},{questname="GMO Graduate",done=false,returnamount=500,questdata={buy={blue=0,bluegoal=10,green=0,greengoal=10,yellow=0,yellowgoal=10}}},{questname="GMO Master",done=false,returnamount=1000,questdata={buy={blue=0,bluegoal=100,green=0,greengoal=100,yellow=0,yellowgoal=100}}},{questname="Quick Work",done=false,returnamount=100,questdata={buy={fertilizer=0,fertilizergoal=3}}},{questname="Addicted",done=false,returnamount=1000000,questdata={harvest={carrot=0,carrotgoal=100000,potato=0,potatogoal=100000,wheat=0,wheatgoal=100000}}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
     
     music("Game Music One:Nothingness", true)
     currentscreen = "splash"
@@ -254,8 +254,183 @@ function setup()
                 text(i..". "..questdata.questname, 347, (535-40-((position-1)*105)))
                 
                 fontSize(10)
-                if questdata.questdata.buy then
+                if questdata.questdata.buy and not questdata.done then
                     text("Buy:", 347, (535-60-((position-1)*105)))
+                    local productcount = 0
+                    if questdata.questdata.buy.carrot then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.carrot.."/"..questdata.questdata.buy.carrotgoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(minecraft_carrot, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.potato then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.potato.."/"..questdata.questdata.buy.potatogoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(minecraft_potato, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.wheat then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.wheat.."/"..questdata.questdata.buy.wheatgoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(minecraft_wheat, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.blue then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.blue.."/"..questdata.questdata.buy.bluegoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(special_bluepotion, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.green then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.green.."/"..questdata.questdata.buy.greengoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(special_greenpotion, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.yellow then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.yellow.."/"..questdata.questdata.buy.yellowgoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(special_yellowpotion, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.buy.fertilizer then
+                        productcount = productcount + 1
+                        text(questdata.questdata.buy.fertilizer.."/"..questdata.questdata.buy.fertilizergoal, 320+16+(60*productcount), (535-60-((position-1)*105))) 
+                        sprite(minecraft_bonemeal, 320+(60*productcount), (535-60-((position-1)*105)), 16, 16)
+                    end
+                end
+                if questdata.questdata.harvest and not questdata.done then
+                    text("Harvest:", 347, (535-80-((position-1)*105)))
+                    local productcount = 0
+                    if questdata.questdata.harvest.carrot then
+                        productcount = productcount + 1
+                        text(questdata.questdata.harvest.carrot.."/"..questdata.questdata.harvest.carrotgoal, 320+16+10+(60*productcount), (535-80-((position-1)*105))) 
+                        sprite(minecraft_carrot, 320+10+(60*productcount), (535-80-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.harvest.potato then
+                        productcount = productcount + 1
+                        text(questdata.questdata.harvest.potato.."/"..questdata.questdata.harvest.potatogoal, 320+16+10+(60*productcount), (535-80-((position-1)*105))) 
+                        sprite(minecraft_potato, 320+10+(60*productcount), (535-80-((position-1)*105)), 16, 16)
+                    end
+                    if questdata.questdata.harvest.wheat then
+                        productcount = productcount + 1
+                        text(questdata.questdata.harvest.wheat.."/"..questdata.questdata.harvest.wheatgoal, 320+16+10+(60*productcount), (535-80-((position-1)*105))) 
+                        sprite(minecraft_wheat, 320+10+(60*productcount), (535-80-((position-1)*105)), 16, 16)
+                    end
+                end
+                if questdata.done then
+                    text("Collect:", 347, (535-60-((position-1)*105)))
+                    text(questdata.returnamount, 330+16+(60), (535-60-((position-1)*105))) 
+                    sprite(minecraft_gold, 330+(60), (535-60-((position-1)*105)), 16, 16)
+                end
+            end
+        end
+    end
+    function updatequests()
+        for i=1, #savefile.quests do
+            local questdata = savefile.quests[i] or false
+            if questdata and questdata.done == false then
+                if questdata.questdata.buy then
+                    if questdata.questdata.buy.carrot then
+                        if questdata.questdata.buy.carrot ~= questdata.questdata.buy.carrotgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.potato then
+                        if questdata.questdata.buy.potato ~= questdata.questdata.buy.potatogoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.wheat then
+                        if questdata.questdata.buy.wheat ~= questdata.questdata.buy.wheatgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.blue then
+                        if questdata.questdata.buy.blue ~= questdata.questdata.buy.bluegoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.green then
+                        if questdata.questdata.buy.green ~= questdata.questdata.buy.greengoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.yellow then
+                        if questdata.questdata.buy.yellow ~= questdata.questdata.buy.yellowgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.fertilizer then
+                        if questdata.questdata.buy.fertilizer ~= questdata.questdata.buy.fertilizer then
+                            break
+                        end
+                    end
+                end
+                if questdata.questdata.harvest then
+                    if questdata.questdata.harvest.carrot then
+                        if questdata.questdata.harvest.carrot ~= questdata.questdata.harvest.carrotgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.harvest.potato then
+                        if questdata.questdata.harvest.potato ~= questdata.questdata.harvest.potatogoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.harvest.wheat then
+                        if questdata.questdata.harvest.wheat ~= questdata.questdata.harvest.wheatgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.harvest.blue then
+                        if questdata.questdata.harvest.blue ~= questdata.questdata.harvest.bluegoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.buy.green then
+                        if questdata.questdata.harvest.green ~= questdata.questdata.harvest.greengoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.harvest.yellow then
+                        if questdata.questdata.harvest.yellow ~= questdata.questdata.harvest.yellowgoal then
+                            break
+                        end
+                    end
+                    if questdata.questdata.harvest.fertilizer then
+                        if questdata.questdata.harvest.fertilizer ~= questdata.questdata.harvest.fertilizer then
+                            break
+                        end
+                    end
+                end
+                questdata.done = "collect"
+            end
+        end
+    end
+    function updatequestinfo(selectmode, selectproduct, selectamount)
+        --return
+        
+        if not selectmode or not selectproduct or not selectamount then return end
+        for currentquest=1, #savefile.quests do
+            local qdata = savefile.quests[currentquest]
+            if qdata.questdata[selectmode] then
+                if qdata.questdata[selectmode][selectproduct] then
+                    qdata.questdata[selectmode][selectproduct] = qdata.questdata[selectmode][selectproduct] + selectamount
+                    if qdata.questdata[selectmode][selectproduct] > qdata.questdata[selectmode][selectproduct.."goal"] then
+                        qdata.questdata[selectmode][selectproduct] = qdata.questdata[selectmode][selectproduct.."goal"]
+                    end
+                end
+            end
+        end
+        
+        if  false then --selectmode == "buy" then
+            for currentquest=1, #savefile.quests do
+                local questdata = savefile.quests[currentquest] or false
+                if questdata.questdata.buy then
+                    if selectproduct == "carrot" then
+                        if questdata.questdata.buy.carrot then
+                            print(questdata.questdata.buy.carrot)
+                            questdata.questdata.buy.carrot = questdata.questdata.buy.carrot + selectamount
+                            if questdata.questdata.buy.carrot > questdata.questdata.buy.carrotgoal then
+                                questdata.questdata.buy.carrot = questdata.questdata.buy.carrotgoal
+                            end
+                        end
+                    end
                 end
             end
         end
@@ -364,6 +539,7 @@ function setup()
         print("touch: "..tx..", "..ty)
         if currentscreen == "main" and tx >= 0 and tx <= 128 and ty >= 0 and ty <= 128 then 
             print("button: viewquests")
+            updatequests()
             currentscreen = "viewquests" 
         elseif currentscreen == "main" and tx >= 896 and tx <= 1024 and ty >= 0 and ty <= 128 then
             print("button: shop")
@@ -429,7 +605,36 @@ function setup()
         if tx >= 729 and tx <= 761 and ty >= 516 and ty <= 546 then
             print("button: exittomain")
             currentscreen = "main"
-        --elseif tx >= 
+        elseif tx >= 263 and tx <= 663 and ty >= 218 and ty <= 533 then
+            if ty >= 428 and ty <= 533 then
+                print("touch: quest1")
+                local questno = currenttopquest
+                local qdata = savefile.quests[questno] or {done=false}
+                if qdata.done == "collect" then
+                    savefile.money = savefile.money + qdata.returnamount
+                    qdata.done = true
+                end
+            elseif ty >= 323 and ty <= 428 then
+                print("touch: quest2")
+                local questno = currenttopquest + 1
+                local qdata = savefile.quests[questno] or {done=false}
+                if qdata.done == "collect" then
+                    savefile.money = savefile.money + qdata.returnamount
+                    qdata.done = true
+                end
+            elseif ty >= 218 and ty <= 323 then
+                print("touch: quest3")
+                local questno = currenttopquest + 2
+                local qdata = savefile.quests[questno] or {done=false}
+                if qdata.done == "collect" then
+                    savefile.money = savefile.money + qdata.returnamount
+                    qdata.done = true
+                end
+            end
+        elseif tx >= 700 and tx <= 745 and ty >= 481 and ty <= 526 and currenttopquest ~= 1 then
+            currenttopquest = currenttopquest - 1
+        elseif tx >= 700 and tx <= 745 and ty >= 243 and ty <= 287 and currenttopquest+2 ~= #savefile.quests then
+            currenttopquest = currenttopquest + 1
         end
     end
     function touchshop(tx, ty)
@@ -566,30 +771,39 @@ function setup()
                     if product == "50carrot" then
                         savefile.slots[plot].tiletype = "growingcarrot"
                         alert("Successfuly bought 50 carrots!", "Store")
+                        updatequestinfo("buy", "carrot", 50)
                     elseif product == "100carrot" then
                         savefile.slots[plot].tiletype = "growingcarrot"
                         alert("Successfuly bought 100 carrots!", "Store")
+                        updatequestinfo("buy", "carrot", 100)
                     elseif product == "1000carrot" then
                         savefile.slots[plot].tiletype = "growingcarrot"
                         alert("Successfuly bought 1000 carrots!", "Store")
+                        updatequestinfo("buy", "carrot", 1000)
                     elseif product == "50potato" then
                         savefile.slots[plot].tiletype = "growingpotato"
                         alert("Successfuly bought 50 potatos!", "Shop")
+                        updatequestinfo("buy", "potato", 50)
                     elseif product == "100potato" then
                         savefile.slots[plot].tiletype = "growingpotato"
                         alert("Successfuly bought 100 potatos!", "Shop")
+                        updatequestinfo("buy", "potato", 100)
                     elseif product == "1000potato" then
                         savefile.slots[plot].tiletype = "growingpotato"
                         alert("Successfuly bought 1000 potatos!", "Shop")
+                        updatequestinfo("buy", "potato", 1000)
                     elseif product == "50wheat" then
                         savefile.slots[plot].tiletype = "growingwheat"
                         alert("Successfuly bought 50 wheat!", "Shop")
+                        updatequestinfo("buy", "wheat", 50)
                     elseif product == "100wheat" then
                         savefile.slots[plot].tiletype = "growingwheat"
                         alert("Successfuly bought 100 wheat!", "Shop")
+                        updatequestinfo("buy", "wheat", 100)
                     elseif product == "1000wheat" then
                         savefile.slots[plot].tiletype = "growingwheat"
                         alert("Successfuly bought 1000 wheat!", "Shop")
+                        updatequestinfo("buy", "wheat", 1000)
                     end
                     savefile.slots[plot].tiledata.growthstart = os.date("!*t")
                     savefile.slots[plot].tiledata.plantdata = productdata
@@ -610,7 +824,7 @@ function setup()
     resettextures()
     sphax_set()
     shopcurrentselected = 1
-    shopdeals = {{amount=10,returnamount=50,returnamountgold=13,callback=function() plant("50carrot",shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots",growtime={y=0,mo=0,d=0,h=0,m=2,s=0}},{amount=20,returnamount=100,returnamountgold=30,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots",growtime={y=0,mo=0,d=0,h=0,m=4,s=0}},{amount=200,returnamount=1000,returnamountgold=400,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots",growtime={y=0,mo=0,d=0,h=0,m=40,s=0}},{amount=20,returnamount=50,returnamountgold=26,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos",growtime={y=0,mo=0,d=0,h=0,m=5,s=0}},{amount=40,returnamount=100,returnamountgold=60,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=400,returnamount=1000,returnamountgold=800,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos",growtime={y=0,mo=0,d=0,h=1,m=40,s=0}},{amount=30,returnamount=50,returnamountgold=37,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=60,returnamount=100,returnamountgold=90,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat",growtime={mo=0,d=0,h=0,m=20,s=0}},{amount=600,returnamount=1000,returnamountgold=1200,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat",growtime={y=0,mo=0,d=0,h=3,m=20,s=0}},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
+    shopdeals = {{amount=10,returnamount=50,returnamountgold=13,callback=function() plant("50carrot",shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots",growtime={y=0,mo=0,d=0,h=0,m=2,s=0}},{amount=20,returnamount=100,returnamountgold=30,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots",growtime={y=0,mo=0,d=0,h=0,m=4,s=0}},{amount=200,returnamount=1000,returnamountgold=400,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots",growtime={y=0,mo=0,d=0,h=0,m=40,s=0}},{amount=20,returnamount=50,returnamountgold=26,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos",growtime={y=0,mo=0,d=0,h=0,m=5,s=0}},{amount=40,returnamount=100,returnamountgold=60,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=400,returnamount=1000,returnamountgold=800,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos",growtime={y=0,mo=0,d=0,h=1,m=40,s=0}},{amount=30,returnamount=50,returnamountgold=37,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=60,returnamount=100,returnamountgold=90,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat",growtime={mo=0,d=0,h=0,m=20,s=0}},{amount=600,returnamount=1000,returnamountgold=1200,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat",growtime={y=0,mo=0,d=0,h=3,m=20,s=0}},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") updatequestinfo("buy", "fertilizer", 1) else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") updatequestinfo("buy", "blue", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") updatequestinfo("buy", "green", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") updatequestinfo("buy", "yellow", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
     currentshopdeal = shopdeals[shopcurrentselected]
     
     fps = math.floor(DeltaTime*60*60)
@@ -736,6 +950,7 @@ function draw()
     elseif currentscreen == "potatoinfo" then drawpotatoinfo()
     elseif currentscreen == "wheatinfo" then drawwheatinfo()
     elseif currentscreen == "buyplot" then drawbuyplot()
+    elseif currentscreen == "tutorial1" then sprite("Dropbox:cofh_block", 0, 0, 1024, 768)
     end
     
     fps = math.floor(DeltaTime*60*60)
@@ -754,7 +969,11 @@ function draw()
         splashtimeout = splashtimeout - 1 
     end
     if splashtimeout == 0 then
-        currentscreen = "main"
+        if not savefile.tutorial then
+            currentscreen = "tutorial1"
+        else
+            currentscreen = "main"
+        end
         splashtimeout = -1
     end
     if opengmoinfotimeout > 0 then
