@@ -5,15 +5,20 @@ displayMode(OVERLAY)
 supportedOrientations(LANDSCAPE_ANY)
 
 -- Use this function to perform your initial setup
-function setup()
-    savefile = readLocalData("savefile", {tutorial=false,currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrot=0,potato=0,wheat=0,quests={{questname="Welcome",done=false,returnamount=50,questdata={buy={carrot=0,carrotgoal=50}}},{questname="Backyard Gardener",done=false,questdata={harvest={carrot=0,carrotgoal=50,potato=0,potatogoal=50,wheat=0,wheatgoal=50}}},{questname="Small Fry Farmer",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=200,potato=0,potatogoal=200,wheat=0,wheatgoal=200}}},{questname="Family Buisness",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=1000,potato=0,potatogoal=1000,wheat=0,wheatgoal=1000}}},{questname="GMO Student",done=false,returnamount=100,questdata={buy={blue=0,bluegoal=1,green=0,greengoal=1,yellow=0,yellowgoal=1}}},{questname="GMO Graduate",done=false,returnamount=500,questdata={buy={blue=0,bluegoal=10,green=0,greengoal=10,yellow=0,yellowgoal=10}}},{questname="GMO Master",done=false,returnamount=1000,questdata={buy={blue=0,bluegoal=100,green=0,greengoal=100,yellow=0,yellowgoal=100}}},{questname="Quick Work",done=false,returnamount=100,questdata={buy={fertilizer=0,fertilizergoal=3}}},{questname="Addicted",done=false,returnamount=1000000,questdata={harvest={carrot=0,carrotgoal=100000,potato=0,potatogoal=100000,wheat=0,wheatgoal=100000}}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}})
+function setup()    
+    
+    --savefileraw = readLocalData("savefile", 
+    savefile = {tutorial=false,currentblankavaliable=3, currentplots = 3,money=10,blue=1,green=1,yellow=1,fertilizer=0,carrot=0,potato=0,wheat=0,quests={{questname="Welcome",done=false,returnamount=50,questdata={buy={carrot=0,carrotgoal=50}}},{questname="Backyard Gardener",done=false,questdata={harvest={carrot=0,carrotgoal=50,potato=0,potatogoal=50,wheat=0,wheatgoal=50}}},{questname="Small Fry Farmer",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=200,potato=0,potatogoal=200,wheat=0,wheatgoal=200}}},{questname="Family Buisness",done=false,returnamount=0,questdata={harvest={carrot=0,carrotgoal=1000,potato=0,potatogoal=1000,wheat=0,wheatgoal=1000}}},{questname="GMO Student",done=false,returnamount=100,questdata={buy={blue=0,bluegoal=1,green=0,greengoal=1,yellow=0,yellowgoal=1}}},{questname="GMO Graduate",done=false,returnamount=500,questdata={buy={blue=0,bluegoal=10,green=0,greengoal=10,yellow=0,yellowgoal=10}}},{questname="GMO Master",done=false,returnamount=1000,questdata={buy={blue=0,bluegoal=100,green=0,greengoal=100,yellow=0,yellowgoal=100}}},{questname="Quick Work",done=false,returnamount=100,questdata={buy={fertilizer=0,fertilizergoal=3}}},{questname="Addicted",done=false,returnamount=1000000,questdata={harvest={carrot=0,carrotgoal=100000,potato=0,potatogoal=100000,wheat=0,wheatgoal=100000}}}},slots={{x=128,y=128,tiletype="locked",tiledata={}},{x=256,y=128,tiletype="locked",tiledata={}},{x=384,y=128,tiletype="locked",tiledata={}},{x=512,y=128,tiletype="locked", tiledata={}},{x=640,y=128,tiletype="locked",tiledata={}},{x=768,y=128,tiletype="locked",tiledata={}},{x=128,y=256,tiletype="locked",tiledata={}},{x=256,y=256,tiletype="locked",tiledata={}},{x=384,y=256,tiletype="locked",tiledata={}},{x=512,y=256,tiletype="locked",tiledata={}},{x=640,y=256,tiletype="locked",tiledata={}},{x=768,y=256,tiletype="locked",tiledata={}},{x=128,y=384,tiletype="locked",tiledata={}},{x=256,y=384,tiletype="locked",tiledata={}},{x=384,y=384,tiletype="locked",tiledata={}},{x=512,y=384,tiletype="locked",tiledata={}},{x=640,y=384,tiletype="locked",tiledata={}},{x=768,y=384,tiletype="locked",tiledata={}},{x=128,y=512,tiletype="blank",tiledata={}},{x=256,y=512,tiletype="blank",tiledata={}},{x=384,y=512,tiletype="blank",tiledata={}},{x=512,y=512,tiletype="locked",tiledata={}},{x=640,y=512,tiletype="locked",tiledata={}},{x=768,y=512,tiletype="locked",tiledata={}}}}
+    --savefile = unserialize(savefileraw)
     
     music("Game Music One:Nothingness", true)
     currentscreen = "splash"
     buystate = 1
     opengmoinfotimeout = -1
     parameter.watch("currentscreen")
-    parameter.number("volume", 0, 1, 0)
+    parameter.number("volume", 0, 1, 10)
+    parameter.action("Clear Data", function() clearLocalData() end)
+    parameter.action("Save", function() saveLocalData("savefile", pickle(savefile)) end)
     lasttouchx = 0
     lasttouchy = 0
     lastdragx = 0
@@ -24,6 +29,9 @@ function setup()
     buyingplot = "none"
     splashtimeout = 5
     currenttopquest = 1
+    gametime = os.date("!*t")
+    currenttime = (gametime.year*31536000+gametime.month*7776000+gametime.day*86400+gametime.hour*3600+gametime.min*60+gametime.sec)
+    lastsavetime = currenttime
     
     function resettextures()
         hqm_questbook = "Dropbox:hqm_questbook"
@@ -382,7 +390,7 @@ function setup()
                             break
                         end
                     end
-                    if questdata.questdata.buy.green then
+                    if questdata.questdata.harvest.green then
                         if questdata.questdata.harvest.green ~= questdata.questdata.harvest.greengoal then
                             break
                         end
@@ -485,7 +493,7 @@ function setup()
         textWrapWidth(350)
         fill(0, 0, 0, 255)
         text("Touch anywhere to continue", 512, 170)
-        text("Transgenic plants have been engineered for scientific research, to create new colours in plants, and to create different crops. In agriculture, currently marketed genetically engineered crops have traits such as resistance to pests, resistance to herbicides, increased nutritional value, or production of valuable goods such as drugs (pharming). A genetically modified organism (GMO) is an organism whose genetic material has been altered using genetic engineering techniques. Organisms that have been genetically modified include micro-organisms such as bacteria and yeast, insects, plants, fish, and mammals. GMOs are the source of genetically modified foods, and are also widely used in scientific research and to produce goods other than food", 512, 384)
+        text("GMO is basically a researched genetically modified organism which helps plants and crops in the future with added features. One of the basic reasons GMO is used now is because the farmers and croppers need help to fend of bacteria for the plant, the GMO can also help reptiles, amphibians, bacteria, insects etc. The formula of GMO was first discovered by a scientists by the names of Herbert Boyer and Stanley Cohen in 1973 as they did it by transferring ones DNA from one organism to another. Later on, other scientist had advanced and created it better to change certain features like the genes of the organism. When genetic material from a different species is added, the resulting DNA is called recombinant DNA and the organism is called a transgenic organism. The first recombinant DNA molecules were produced by Paul Berg in 1972.", 512, 384)
     end
     function drawcarrotinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -494,6 +502,7 @@ function setup()
         textWrapWidth(350)
         fill(0, 0, 0, 255)
         text("Touch anywhere to continue", 512, 170)
+        text("The carrots grow the best in mostly sunlight but also some shade. The best temperature for you to grow the carrots between 16 to 21 Celsius.In order. Carrots take around four months to mature and it is suggested that carrot seeds are sown from mid-February to July.", 512, 384)
     end
     function drawpotatoinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -502,6 +511,7 @@ function setup()
         textWrapWidth(350)
         fill(0, 0, 0, 255)
         text("Touch anywhere to continue", 512, 170)
+        text("", 512, 384)
     end
     function drawwheatinfo()
         sprite(minecraft_bookpage, 293, 114, 438, 540)
@@ -510,6 +520,7 @@ function setup()
         textWrapWidth(350)
         fill(0, 0, 0, 255)
         text("Touch anywhere to continue", 512, 170)
+        text("", 512, 384)
     end
     function drawbuyplot()
         sprite(special_plotshop, 320, 217)
@@ -594,6 +605,7 @@ function setup()
                     if plotdata.tiledata.green then
                         savefile.money = savefile.money + plotdata.tiledata.plantdata.returnamountgold
                     end
+                    updatequestinfo("harvest", producttypename, plotdata.tiledata.plantdata.returnamount)
                     plotdata.tiletype = "blank"
                     plotdata.tiledata = {}
                     savefile.currentblankavaliable = savefile.currentblankavaliable + 1
@@ -824,7 +836,7 @@ function setup()
     resettextures()
     sphax_set()
     shopcurrentselected = 1
-    shopdeals = {{amount=10,returnamount=50,returnamountgold=13,callback=function() plant("50carrot",shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots",growtime={y=0,mo=0,d=0,h=0,m=2,s=0}},{amount=20,returnamount=100,returnamountgold=30,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots",growtime={y=0,mo=0,d=0,h=0,m=4,s=0}},{amount=200,returnamount=1000,returnamountgold=400,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots",growtime={y=0,mo=0,d=0,h=0,m=40,s=0}},{amount=20,returnamount=50,returnamountgold=26,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos",growtime={y=0,mo=0,d=0,h=0,m=5,s=0}},{amount=40,returnamount=100,returnamountgold=60,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=400,returnamount=1000,returnamountgold=800,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos",growtime={y=0,mo=0,d=0,h=1,m=40,s=0}},{amount=30,returnamount=50,returnamountgold=37,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=60,returnamount=100,returnamountgold=90,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat",growtime={mo=0,d=0,h=0,m=20,s=0}},{amount=600,returnamount=1000,returnamountgold=1200,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat",growtime={y=0,mo=0,d=0,h=3,m=20,s=0}},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") updatequestinfo("buy", "fertilizer", 1) else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") updatequestinfo("buy", "blue", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") updatequestinfo("buy", "green", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") updatequestinfo("buy", "yellow", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
+    shopdeals = {{amount=10,returnamount=50,returnamountgold=13,callback=function() plant("50carrot",shopdeals[1]) end,art=minecraft_carrot,name="50 Carrots",growtime={y=0,mo=0,d=0,h=0,m=2,s=0}},{amount=20,returnamount=100,returnamountgold=30,callback=function() plant("100carrot", shopdeals[2]) end,art=minecraft_carrot,name="100 Carrots",growtime={y=0,mo=0,d=0,h=0,m=4,s=0}},{amount=200,returnamount=1000,returnamountgold=400,callback=function() plant("1000carrot", shopdeals[3]) end,art=minecraft_carrot,name="1000 Carrots",growtime={y=0,mo=0,d=0,h=0,m=40,s=0}},{amount=20,returnamount=50,returnamountgold=26,callback=function() plant("50potato", shopdeals[4]) end,art=minecraft_potato,name="50 Potatos",growtime={y=0,mo=0,d=0,h=0,m=5,s=0}},{amount=40,returnamount=100,returnamountgold=60,callback=function() plant("100potato", shopdeals[5]) end,art=minecraft_potato,name="100 Potatos",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=400,returnamount=1000,returnamountgold=800,callback=function() plant("1000potato", shopdeals[6]) end,art=minecraft_potato,name="1000 Potatos",growtime={y=0,mo=0,d=0,h=1,m=40,s=0}},{amount=30,returnamount=50,returnamountgold=37,callback=function() plant("50wheat", shopdeals[7]) end,art=minecraft_wheat,name="50 Wheat",growtime={y=0,mo=0,d=0,h=0,m=10,s=0}},{amount=60,returnamount=100,returnamountgold=90,callback=function() plant("100wheat", shopdeals[8]) end,art=minecraft_wheat,name="100 Wheat",growtime={y=0,mo=0,d=0,h=0,m=20,s=0}},{amount=600,returnamount=1000,returnamountgold=1200,callback=function() plant("1000wheat", shopdeals[9]) end,art=minecraft_wheat,name="1000 Wheat",growtime={y=0,mo=0,d=0,h=3,m=20,s=0}},{amount=30,returnamount=1,callback=function() if savefile.money > 30 then savefile.money = savefile.money - 30 savefile.fertilizer = savefile.fertilizer + 1 alert("Successfuly bought 1 fertilizer!", "Shop") updatequestinfo("buy", "fertilizer", 1) else alert("You don't have enough gold!", "Shop") end end,art=minecraft_bonemeal,name="1 Fertilizer"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.blue = savefile.blue + 1 alert("Successfuly bought 1 Blue GMO!", "Shop") updatequestinfo("buy", "blue", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_bluepotion,name="1 Blue GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.green = savefile.green + 1 alert("Successfuly bought 1 Green GMO!", "Shop") updatequestinfo("buy", "green", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_greenpotion,name="1 Green GMO"},{amount=50,returnamount=1,callback=function() if savefile.money > 50 then savefile.money = savefile.money - 50 savefile.yellow = savefile.yellow + 1 alert("Successfuly bought 1 Yellow GMO!", "Shop") updatequestinfo("buy", "yellow", 1) else alert("You don't have enough gold!", "Shop") end end,art=special_yellowpotion,name="1 Yellow GMO"}}
     currentshopdeal = shopdeals[shopcurrentselected]
     
     fps = math.floor(DeltaTime*60*60)
@@ -970,8 +982,8 @@ function draw()
     end
     if splashtimeout == 0 then
         if not savefile.tutorial then
-            currentscreen = "tutorial1"
-        else
+            --currentscreen = "tutorial1"
+        --else
             currentscreen = "main"
         end
         splashtimeout = -1
@@ -986,4 +998,8 @@ function draw()
     --savefile.money = 1000000000
     
     music.volume = volume
+    
+    if lastsavetime + 30 <= currenttime then
+        saveLocalData("savefile", savefile)
+    end
 end
